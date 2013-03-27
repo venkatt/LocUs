@@ -1,20 +1,28 @@
 package com.example.locus.entity;
 
+import com.example.locus.tilesystem.Point2D;
+import com.example.locus.tilesystem.TileSystem;
+
 public class User {
 	public static String UnknownName = "Unknown";
-	
+
 	private String name;
 	private Sex sex;
 	private String ip;
-	
+	private double latitude;
+	private double longtitude;
+
 	public User() {
-		this(UnknownName, Sex.Unknown, null);
+		this(UnknownName, Sex.Unknown, null, Double.MIN_VALUE, Double.MIN_VALUE);
 	}
-	
-	public User(String name, Sex sex, String ip){
+
+	public User(String name, Sex sex, String ip, double latitude,
+			double longtitude) {
 		this.name = name;
 		this.sex = sex;
 		this.ip = ip;
+		this.latitude = latitude;
+		this.longtitude = longtitude;
 	}
 
 	public String getName() {
@@ -41,9 +49,44 @@ public class User {
 		this.ip = ip;
 	}
 
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongtitude() {
+		return longtitude;
+	}
+
+	public void setLongtitude(double longtitude) {
+		this.longtitude = longtitude;
+	}
+
+	public String getTileNumber() {
+		if (latitude == Double.MIN_VALUE || longtitude == Double.MIN_VALUE){
+			return null;
+		}
+		
+		Point2D pixel = new Point2D();
+		TileSystem.LatLongToPixelXY(latitude, longtitude,
+				TileSystem.DefaultLevelOfDetail, pixel);
+
+		Point2D tile = new Point2D();
+		TileSystem
+				.PixelXYToTileXY((int) pixel.getX(), (int) pixel.getY(), tile);
+
+		return TileSystem.TileXYToQuadKey((int) tile.getX(), (int) tile.getY(),
+				TileSystem.DefaultLevelOfDetail);
+	}
+
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", sex=" + sex + ", ip=" + ip + "]";
+		return "User [name=" + name + ", sex=" + sex + ", ip=" + ip + ", lat="
+				+ latitude + ", lon=" + longtitude + ", tile="
+				+ getTileNumber() + "]";
 	}
-	
+
 }

@@ -22,9 +22,9 @@ public class FakeCoreImpl implements ICore {
 	@Override
 	public List<User> getUsersNearby() {
 		List<User> results = new ArrayList<User>();
-		results.add(new User("Alice", Sex.Female, "192.168.1.1"));
-		results.add(new User("Bob", Sex.Male, "192.168.1.2"));
-		results.add(new User("Charlie", Sex.Unknown, "192.168.1.3"));
+		results.add(new User("Alice", Sex.Female, "192.168.1.1", 0, 0));
+		results.add(new User("Bob", Sex.Male, "192.168.1.2", 0, 0));
+		results.add(new User("Charlie", Sex.Unknown, "192.168.1.3", 0, 0));
 		results.add(new User());
 		log.info(Arrays.toString(results.toArray()));
 		return results;

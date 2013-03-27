@@ -8,6 +8,8 @@ public class TileSystem {
 	private static double MaxLatitude = 85.05112878;
 	private static double MinLongitude = -180;
 	private static double MaxLongitude = 180;
+	
+	public static int DefaultLevelOfDetail = 15;
 
 	// / <summary>
 	// / Clips a number to the specified minimum and maximum values.
