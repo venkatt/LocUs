@@ -47,5 +47,13 @@ public class CoreFacade implements ICore {
 		return coreImpl.addObserver(obs);
 	}
 
-	
+	@Override
+	public Result register(User user) {
+		return coreImpl.register(user);
+	}
+
+	@Override
+	public Result logout() {
+		return coreImpl.logout();
+	}
 }

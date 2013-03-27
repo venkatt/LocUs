@@ -12,10 +12,14 @@ import com.example.locus.entity.User;
 
 public class FakeCoreImpl implements ICore {
 	static Logger log = Logger.getLogger(FakeCoreImpl.class.getName());
+	
+	private User user;
 
 	@Override
 	public Result refreshLocation(double lati, double longti) {
 		log.info(String.format("refreshLocation (%.3f, %.3f)", lati, longti));
+		user.setLatitude(lati);
+		user.setLongtitude(longti);
 		return Result.Success;
 	}
 
@@ -45,6 +49,19 @@ public class FakeCoreImpl implements ICore {
 	@Override
 	public Result addObserver(IObserver obs) {
 		log.info(String.format("addObserver %s", obs));
+		return Result.Success;
+	}
+	
+	@Override
+	public Result register(User user) {
+		log.info(String.format("register %s", user));
+		this.user = user;
+		return Result.Success;
+	}
+
+	@Override
+	public Result logout() {
+		log.info(String.format("logout %s", user));
 		return Result.Success;
 	}
 

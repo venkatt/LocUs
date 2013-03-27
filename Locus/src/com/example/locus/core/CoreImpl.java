@@ -37,4 +37,16 @@ public class CoreImpl implements ICore {
 		return null;
 	}
 
+	@Override
+	public Result register(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Result logout() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
