@@ -1,5 +1,7 @@
 package com.example.locus;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,11 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AdapterList extends ArrayAdapter<ListDetails> {
+import com.example.locus.entity.Sex;
+import com.example.locus.entity.User;
+
+public class AdapterList extends ArrayAdapter<User> {
   
 	Context context; 
     int layoutResourceId;    
-    ListDetails data[] = null;
+    List<User> data;
     
     static class ListDetailsHolder
     {
@@ -21,7 +26,7 @@ public class AdapterList extends ArrayAdapter<ListDetails> {
         TextView NameTextView;
     }
     
-    public AdapterList(Context context, int layoutResourceId, ListDetails[] data){
+    public AdapterList(Context context, int layoutResourceId, List<User> data){
     	 super(context, layoutResourceId, data);
          this.layoutResourceId = layoutResourceId;
          this.context = context;
@@ -48,9 +53,12 @@ public class AdapterList extends ArrayAdapter<ListDetails> {
             holder = (ListDetailsHolder)row.getTag();
         }
         
-        ListDetails listdetails = data[position];
-        holder.NameTextView.setText(listdetails.name);
-        holder.ImageView.setImageResource(listdetails.profilePic);
+        User user = data.get(position);
+        holder.NameTextView.setText(user.getName());
+        if(user.getSex() == Sex.Female)
+        	holder.ImageView.setImageResource(R.drawable.femaleicon);
+        else
+        	holder.ImageView.setImageResource(R.drawable.maleicon);
         
         return row;
     }

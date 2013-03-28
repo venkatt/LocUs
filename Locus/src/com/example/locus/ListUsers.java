@@ -1,5 +1,8 @@
 package com.example.locus;
 
+import java.io.IOException;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +18,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ListUsers extends Activity implements LocationListener {
+import com.example.locus.core.CoreFacade;
+import com.example.locus.core.ICore;
+import com.example.locus.core.IObserver;
+import com.example.locus.entity.User;
+
+public class ListUsers extends Activity implements LocationListener, IObserver {
 
 	 private TextView latituteField;
 	 private TextView longitudeField;
@@ -23,13 +31,20 @@ public class ListUsers extends Activity implements LocationListener {
 	 private String provider;
 	 double latitude = 0;
 	 double longitude = 0;
+	 String ipAddress;
 	 String username;
 	 private ListView listView;
+	 ICore core;
 	
 	 @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_users);
+		
+		//create Icore instance
+		core = CoreFacade.getInstance();
+		core.addObserver(this);
+		
 		Intent intent = getIntent();
 		username = intent.getStringExtra("userName");
 		latituteField = (TextView) findViewById(R.id.textView1);
@@ -54,7 +69,10 @@ public class ListUsers extends Activity implements LocationListener {
 	    
 	    //----------------------------- FOR LIST VIEW ---------------------------------------------------------
 	    
-	    ListDetails data[] = new ListDetails[]{
+	    List<User> data = core.getUsersNearby();
+	    
+	    
+	    /*ListDetails data[] = new ListDetails[]{
 	    		
 	    		new ListDetails(R.drawable.a, "Car1"),
 	    		new ListDetails(R.drawable.b, "Car2"),
@@ -74,7 +92,7 @@ public class ListUsers extends Activity implements LocationListener {
 	    		new ListDetails(R.drawable.c, "Car15"),
 	    		
 	    		new ListDetails(R.drawable.e, "Car5")
-	    };
+	    };*/
 	    AdapterList adapter = new AdapterList (this, R.layout.activity_list_adapter, data);
 	    
 	    listView = (ListView)findViewById(R.id.listView);
@@ -95,9 +113,9 @@ public class ListUsers extends Activity implements LocationListener {
 	        public void onItemClick(AdapterView<?> adapter, View view, int position,
 	                long id) {
 	            // TODO Auto-generated method stub
-	            ListDetails o = (ListDetails)adapter.getItemAtPosition(position);
-	            String str_text = o.name;
-	            Toast.makeText(getApplicationContext(),str_text+" SelecteD ", Toast.LENGTH_SHORT).show();
+	            User o = (User)adapter.getItemAtPosition(position);
+	            String str_text = o.getName();
+	            Toast.makeText(getApplicationContext(),str_text+" SelecteD ", Toast.LENGTH_LONG).show();
 	        }
 
 	    });  
@@ -120,8 +138,10 @@ public class ListUsers extends Activity implements LocationListener {
 
 	  @Override
 	  public void onLocationChanged(Location location) {
+		  
 	    latitude = (double) (location.getLatitude());
 	    longitude = (double) (location.getLongitude());
+	    core.refreshLocation(latitude, longitude);
 	    latituteField.setText(String.valueOf(latitude));
 	    longitudeField.setText(String.valueOf(longitude));
 	  }
@@ -151,6 +171,18 @@ public class ListUsers extends Activity implements LocationListener {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_list_users, menu);
 		return true;
+	}
+
+	@Override
+	public void onReceiveMessage(User src, String msg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onReceiveUserProfile(User user) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

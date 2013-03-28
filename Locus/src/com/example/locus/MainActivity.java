@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -21,37 +22,42 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
+
 	public void onClick(View view){
-		
-		
-	    EditText userName = (EditText) findViewById(R.id.editText1);
-	    String message = userName.getText().toString();
-	    EditText lat = (EditText) findViewById(R.id.editText2);
-	    EditText lon = (EditText) findViewById(R.id.editText3);
-	    if( isEmpty(lat) || isEmpty(lon)){
-	    	Intent intent = new Intent(this, ListUsers.class);
-	    	intent.putExtra("userName", message);
-	    	startActivity(intent);
-	    }
-	    else{
-	    	Intent intent = new Intent(this, Demo.class);
-	    	String longi = lon.getText().toString();
-	    	String lati = lat.getText().toString();
-	    	intent.putExtra("userName", message);
-	    	intent.putExtra("latitude", lati);
-	    	intent.putExtra("longitude", longi);
-	    	startActivity(intent);
-	    	
-	    }
+
+
+		EditText userName = (EditText) findViewById(R.id.editText1);
+		String message = userName.getText().toString();
+		EditText lat = (EditText) findViewById(R.id.editText2);
+		EditText lon = (EditText) findViewById(R.id.editText3);
+
+		if(isEmpty(userName))
+			Toast.makeText(this,"Enter UserName" , Toast.LENGTH_LONG).show();
+		else{
+			if( isEmpty(lat) || isEmpty(lon)){
+				Intent intent = new Intent(this, ListUsers.class);
+				intent.putExtra("userName", message);
+				startActivity(intent);
+			}
+			else{
+				Intent intent = new Intent(this, Demo.class);
+				String longi = lon.getText().toString();
+				String lati = lat.getText().toString();
+				intent.putExtra("userName", message);
+				intent.putExtra("latitude", lati);
+				intent.putExtra("longitude", longi);
+				startActivity(intent);
+
+			}
+		}
 	}
 
 	private boolean isEmpty(EditText etText) {
-	    if (etText.getText().toString().trim().length() > 0) {
-	        return false;
-	    } else {
-	        return true;
-	    }
+		if (etText.getText().toString().trim().length() > 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 }
 
