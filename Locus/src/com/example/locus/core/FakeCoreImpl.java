@@ -3,8 +3,7 @@ package com.example.locus.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.example.locus.entity.Result;
 import com.example.locus.entity.Sex;

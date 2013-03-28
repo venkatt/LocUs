@@ -1,5 +1,6 @@
 package com.example.locus;
 
+import java.io.IOException;
 import java.util.List;
 
 import android.app.Activity;
@@ -88,7 +89,12 @@ public class Demo extends Activity implements IObserver{
 	            // TODO Auto-generated method stub
 	            User o = (User)adapter.getItemAtPosition(position);
 	            String str_text = o.getName();
-	            Toast.makeText(getApplicationContext(),str_text+" SelecteD ", Toast.LENGTH_SHORT).show();
+	            try {
+					Toast.makeText(getApplicationContext(),IPAddress.getIPAddress(true)+"\t"+str_text+" SelecteD ", Toast.LENGTH_SHORT).show();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	        }
 
 	    });  

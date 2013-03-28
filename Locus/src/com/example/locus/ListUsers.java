@@ -115,7 +115,12 @@ public class ListUsers extends Activity implements LocationListener, IObserver {
 	            // TODO Auto-generated method stub
 	            User o = (User)adapter.getItemAtPosition(position);
 	            String str_text = o.getName();
-	            Toast.makeText(getApplicationContext(),str_text+" SelecteD ", Toast.LENGTH_LONG).show();
+	            try {
+					Toast.makeText(getApplicationContext(),IPAddress.getIPAddress(true)+str_text+" SelecteD ", Toast.LENGTH_LONG).show();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	        }
 
 	    });  
@@ -141,7 +146,7 @@ public class ListUsers extends Activity implements LocationListener, IObserver {
 		  
 	    latitude = (double) (location.getLatitude());
 	    longitude = (double) (location.getLongitude());
-	    core.refreshLocation(latitude, longitude);
+	    //core.refreshLocation(latitude, longitude);
 	    latituteField.setText(String.valueOf(latitude));
 	    longitudeField.setText(String.valueOf(longitude));
 	  }
