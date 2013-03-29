@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.locus.core.CoreFacade;
 import com.example.locus.core.ICore;
 import com.example.locus.core.IObserver;
+import com.example.locus.entity.Sex;
 import com.example.locus.entity.User;
 
 public class Demo extends Activity implements IObserver{
@@ -23,64 +24,50 @@ public class Demo extends Activity implements IObserver{
 	 double latitude = 0;
 	 double longitude = 0;
 	 String username;
+	 String ipAdd;
+	 String gender;
 	 private ListView listView;
 	 private TextView latituteField;
 	 private TextView longitudeField;
 	 ICore core;
+	 User currentUser;
 	
 	 @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_users);
 		Intent intent = getIntent();
-		
+		currentUser = new User();
 		//create Icore instance
 		core = CoreFacade.getInstance();
 		//core.addObserver(this);
 		username = intent.getStringExtra("userName");
 		latitude = Double.parseDouble(intent.getStringExtra("latitude"));
 		longitude = Double.parseDouble(intent.getStringExtra("longitude"));
+		ipAdd = intent.getStringExtra("IP");
+		gender = intent.getStringExtra("sex");
+		
+		currentUser.setLatitude(latitude);
+	    currentUser.setLongtitude(longitude);
+	    currentUser.setIp(ipAdd);
+		currentUser.setName(username);
+		if(gender.equals("Male"))
+			currentUser.setSex(Sex.Male);
+		else
+			currentUser.setSex(Sex.Female);
+		
 		latituteField = (TextView) findViewById(R.id.textView1);
 	    longitudeField = (TextView) findViewById(R.id.textView2);
 	    latituteField.setText(String.valueOf(latitude));
 	    longitudeField.setText(String.valueOf(longitude));
+	
 	    //----------------------------- FOR LIST VIEW ---------------------------------------------------------
 	    List<User> data = core.getUsersNearby();
-	    /*ListDetails data[] = new ListDetails[]{
-	    		
-	    		new ListDetails(R.drawable.a, "Car1"),
-	    		new ListDetails(R.drawable.b, "Car2"),
-	    		new ListDetails(R.drawable.c, "Car3"),
-	    		new ListDetails(R.drawable.d, "Car4"),
-	    		new ListDetails(R.drawable.d, "Car5"),
-	    		new ListDetails(R.drawable.d, "Car6"),
-	    		new ListDetails(R.drawable.d, "Car7"),
-	    		new ListDetails(R.drawable.d, "Car8"),
-	    		new ListDetails(R.drawable.a, "Car9"),
-	    		new ListDetails(R.drawable.b, "Car10"),
-	    		new ListDetails(R.drawable.c, "Car11"),
-	    		new ListDetails(R.drawable.d, "Car12"),
-	    		new ListDetails(R.drawable.e, "Car13"),
-	    		new ListDetails(R.drawable.a, "Car14"),
-	    		new ListDetails(R.drawable.b, "Car15"),
-	    		new ListDetails(R.drawable.c, "Car15"),
-	    		
-	    		new ListDetails(R.drawable.e, "Car5")
-	    };*/
 	    AdapterList adapter = new AdapterList (this, R.layout.activity_list_adapter, data);
 	    
 	    listView = (ListView)findViewById(R.id.listView);
 	    listView.setAdapter(adapter);
 	    
-	    /*listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view,
-                                           int position, long id) {
-				// user clicked a list item, make it "selected"
-				
-				Toast.makeText(getApplicationContext(),listView.getItemAtPosition(position).toString()+" selected", Toast.LENGTH_SHORT).show();
-			}
-        });*/
 	    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 	        @Override
@@ -89,12 +76,7 @@ public class Demo extends Activity implements IObserver{
 	            // TODO Auto-generated method stub
 	            User o = (User)adapter.getItemAtPosition(position);
 	            String str_text = o.getName();
-	            try {
-					Toast.makeText(getApplicationContext(),IPAddress.getIPAddress(true)+"\t"+str_text+" SelecteD ", Toast.LENGTH_SHORT).show();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	            Toast.makeText(getApplicationContext(),str_text+" SelecteD\n"+"IP = "+o.getIp()+"\nLat="+o.getLatitude()+" Lon="+o.getLongtitude(), Toast.LENGTH_LONG).show();
 	        }
 
 	    });  
@@ -122,5 +104,7 @@ public class Demo extends Activity implements IObserver{
 		// TODO Auto-generated method stub
 		
 	}
-
+	public void onDestroy(){
+		core.logout();
+	}
 }

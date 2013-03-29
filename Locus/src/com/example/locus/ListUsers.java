@@ -1,6 +1,5 @@
 package com.example.locus;
 
-import java.io.IOException;
 import java.util.List;
 
 import android.app.Activity;
@@ -21,6 +20,7 @@ import android.widget.Toast;
 import com.example.locus.core.CoreFacade;
 import com.example.locus.core.ICore;
 import com.example.locus.core.IObserver;
+import com.example.locus.entity.Sex;
 import com.example.locus.entity.User;
 
 public class ListUsers extends Activity implements LocationListener, IObserver {
@@ -33,20 +33,32 @@ public class ListUsers extends Activity implements LocationListener, IObserver {
 	 double longitude = 0;
 	 String ipAddress;
 	 String username;
+	 String ipAdd;
+	 String gender;
 	 private ListView listView;
 	 ICore core;
+	 User currentUser;
 	
 	 @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_users);
-		
+		currentUser = new User();
 		//create Icore instance
 		core = CoreFacade.getInstance();
 		core.addObserver(this);
 		
 		Intent intent = getIntent();
 		username = intent.getStringExtra("userName");
+		gender = intent.getStringExtra("sex");
+		ipAdd = intent.getStringExtra("IP");
+		currentUser.setIp(ipAdd);
+		currentUser.setName(username);
+		if(gender.equals("Male"))
+			currentUser.setSex(Sex.Male);
+		else
+			currentUser.setSex(Sex.Female);
+		
 		latituteField = (TextView) findViewById(R.id.textView1);
 	    longitudeField = (TextView) findViewById(R.id.textView2);
 	    // Get the location manager
@@ -115,12 +127,7 @@ public class ListUsers extends Activity implements LocationListener, IObserver {
 	            // TODO Auto-generated method stub
 	            User o = (User)adapter.getItemAtPosition(position);
 	            String str_text = o.getName();
-	            try {
-					Toast.makeText(getApplicationContext(),IPAddress.getIPAddress(true)+str_text+" SelecteD ", Toast.LENGTH_LONG).show();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	            Toast.makeText(getApplicationContext(),str_text+" SelecteD\n"+"IP = "+o.getIp()+"\nLat="+o.getLatitude()+" Lon="+o.getLongtitude(), Toast.LENGTH_LONG).show();
 	        }
 
 	    });  
@@ -146,9 +153,12 @@ public class ListUsers extends Activity implements LocationListener, IObserver {
 		  
 	    latitude = (double) (location.getLatitude());
 	    longitude = (double) (location.getLongitude());
+	    currentUser.setLatitude(latitude);
+	    currentUser.setLongtitude(longitude);
 	    //core.refreshLocation(latitude, longitude);
 	    latituteField.setText(String.valueOf(latitude));
 	    longitudeField.setText(String.valueOf(longitude));
+	    
 	  }
 
 	  @Override
@@ -189,5 +199,10 @@ public class ListUsers extends Activity implements LocationListener, IObserver {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void onDestroy(){
+		core.logout();
+	}
+	
 
 }
